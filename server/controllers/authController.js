@@ -2,6 +2,14 @@ const {sendOtpEmail} = require('../utils/email')
 const OTP = require('../models/otp')
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
+
+// ============ GENERATE===TOKEN===================
+
+const generateToken = (id, role) => {
+  return jwt.sign({id, role}, process.env.JWT_SECRET, {expiresIn: '7d'})
+}
 
 
 
@@ -74,12 +82,14 @@ exports.loginUser = async (req,res) => {
     });
   }
 
-  res.status(200).json({
+  res.json({
     message:"Login Successful",
-    user:{
-      id: user._id,
-      name: user.name,
-      email: user.email
-    }
-  });
+    _id: user._id,
+    name:user.name,
+    email:user.email,
+    role:user.role,
+    token: generateToken(user._id, user.role)
+  })
+
+
 }
