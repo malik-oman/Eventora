@@ -3,6 +3,8 @@ const cors = require('cors')
 const dotenv = require('dotenv');
 const mongoose = require('mongoose')
 const authRoutes = require('./routes/auth')
+const eventRoutes = require('./routes/event')
+const bookingRoutes = require('./routes/bookings')
 
 dotenv.config()
 
@@ -14,7 +16,9 @@ app.use(express.json())
 
 // API ROUTES=====================================
 
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/event', eventRoutes );
+app.use('/api/bookings', bookingRoutes  );
 
 // CONNECT TO DATABAS=====================
 mongoose.connect(process.env.MONGODB_URI).then(()=>{
