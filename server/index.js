@@ -1,37 +1,29 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose')
-const authRoutes = require('./routes/auth')
-const eventRoutes = require('./routes/event')
-const bookingRoutes = require('./routes/bookings')
 
-dotenv.config()
+dotenv.config();
 
-// MIDLLEWARES==============================================
+const authRoutes = require('./routes/auth');
+const eventRoutes = require('./routes/event');
+const bookingRoutes = require('./routes/bookings');
+
 const app = express();
+
+// Middleware
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
-
-// API ROUTES=====================================
-
+// Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/event', eventRoutes );
-app.use('/api/bookings', bookingRoutes  );
+app.use('/api/events', eventRoutes);
+app.use('/api/bookings', bookingRoutes);
 
-// CONNECT TO DATABAS=====================
-mongoose.connect(process.env.MONGODB_URI).then(()=>{
-  console.log('COnnected MongoDB')
-})
-.catch((error)=>{
-  console.error('Error connecting to MongoDB:', error)
-})
+// Database Connection
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/eventora')
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB Connection Error:', err));
 
-// PORT==========================================
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log('App listening on port !');
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
